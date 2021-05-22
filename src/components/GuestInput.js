@@ -5,7 +5,7 @@ export default function GuestInput({
   setLastName,
 }) {
   return (
-    <div classNamr="Inputs">
+    <div className="Inputs">
       <label htmlFor="First name">
         First name:
         <input
