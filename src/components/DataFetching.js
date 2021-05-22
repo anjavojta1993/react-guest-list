@@ -23,6 +23,15 @@ export default function DataFetching() {
   return (
     <div>
       <h1>Guest List</h1>
+      <ul>
+        {allGuests.map((guest) => {
+          return (
+            <li key={guest.id}>
+              (`${guest.firstName} ${guest.lastName}`
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
