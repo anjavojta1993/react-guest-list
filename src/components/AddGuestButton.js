@@ -27,11 +27,5 @@ export default function AddGuestButton({
     addGuest();
   }, []);
 
-  return (
-    <button
-    // onClick={() => }
-    >
-      Add Guest
-    </button>
-  );
+  return <button onClick={() => addGuest()}>Add Guest</button>;
 }
