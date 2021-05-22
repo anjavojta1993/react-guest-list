@@ -15,8 +15,8 @@ export default function AddGuestButton({
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            firstName: { firstName },
-            lastName: { lastName },
+            firstName: firstName,
+            lastName: lastName,
           }),
         });
         setCreatedGuest(await response.json());
