@@ -1,8 +1,7 @@
 import './App.css';
 import { useState } from 'react';
-import AddGuestButton from './components/AddGuestButton';
-import DataFetching from './components/DataFetching';
 import GuestInput from './components/GuestInput';
+import GuestList from './components/GuestList';
 import Header from './components/Header';
 
 function App() {
@@ -18,14 +17,13 @@ function App() {
       }}
     >
       <Header />
-      <DataFetching />
       <GuestInput
         firstName={firstName}
         lastName={lastName}
         setFirstName={setFirstName}
         setLastName={setLastName}
       />
-      <AddGuestButton
+      <GuestList
         createdGuest={createdGuest}
         setCreatedGuest={setCreatedGuest}
       />
