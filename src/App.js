@@ -2,6 +2,7 @@ import './App.css';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
+import { FaTimes } from 'react-icons/fa';
 import GuestInput from './components/GuestInput';
 import Header from './components/Header';
 
@@ -56,75 +57,108 @@ const toggleButton = css`
   }
 `;
 
+const deleteStyles = css`
+  cursor: pointer;
+
+  :hover {
+    color: #303030;
+  }
+`;
+
 function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [createdGuest, setCreatedGuest] = useState('');
   const baseUrl = 'http://localhost:5000';
   const [allGuests, setAllGuests] = useState([]);
-  const [updatedGuest, setUpdatedGuest] = useState(false);
 
-    // fetch user Data
+  // fetch user Data
 
-    useEffect(() => {
-      async function fetchUserData() {
-        try {
-          const response = await fetch(`${baseUrl}/`);
-          setAllGuests(await response.json());
-        } catch (e) {
-          console.error(e);
-        }
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const response = await fetch(`${baseUrl}/`);
+        setAllGuests(await response.json());
+      } catch (e) {
+        console.error(e);
       }
-      fetchUserData();
-    }, []);
-
-    // return loading on the first load when no guest entry yet
-
-    if (allGuests === []) {
-      return (
-        <div>
-          <iframe
-            title="Loading gif"
-            src="https://giphy.com/embed/feN0YJbVs0fwA"
-            width="480"
-            height="480"
-            frameBorder="0"
-            class="giphy-embed"
-            allowFullScreen
-          />
-        </div>
-      );
     }
+    fetchUserData();
+  }, []);
 
-    // function to add guest
+  // return loading on the first load when no guest entry yet
 
-    async function addGuest() {
-      const response = await fetch(`${baseUrl}/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ firstName: firstName, lastName: lastName }),
-      });
-      setCreatedGuest(await response.json());
-    }
-    const handleAddGuest = () => {
-      setFirstName(firstName);
-      setLastName(lastName);
-      addGuest();
+  if (allGuests === []) {
+    return (
+      <div>
+        <iframe
+          title="Loading gif"
+          src="https://giphy.com/embed/feN0YJbVs0fwA"
+          width="480"
+          height="480"
+          frameBorder="0"
+          class="giphy-embed"
+          allowFullScreen
+        />
+      </div>
+    );
+  }
+
+  // function to add guest
+
+  async function addGuest() {
+    const response = await fetch(`${baseUrl}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ firstName: firstName, lastName: lastName }),
+    });
+    const createdGuest = await response.json();
+  }
+  const handleAddGuest = () => {
+    setFirstName(firstName);
+    setLastName(lastName);
+    addGuest();
+  };
+
+  // function to update guest attending
+
+  async function updateGuestInfo(attending, id) {
+    const response = await fetch(`${baseUrl}/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ attending: attending }),
+    });
+    const updatedGuest = await response.json();
+    console.log(updatedGuest);
+    // replace updatedGuest.attending in allGuests
+    // step 1: look for the guest with id that was replaced in allGuests
+    // step 2: replace value of attending with current value of attending
+    // step 3: setAllGuests to [...allGuests]
+  }
+
+  const handleChangeAttendance = (event, id) => {
+    updateGuestInfo(event.currentTarget.checked, id);
+
+    console.log(event.currentTarget.checked);
+  };
+
+  // function to delete guest
+
+  async function deleteGuest(id) {
+    const response = await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
+    const deletedGuest = await response.json();
+
+    const filterGuests = () => {
+      setAllGuests(allGuests.filter((guest) => guest.id !== deletedGuest.id));
     };
+  }
 
-     // function to update guest attending
-
-     async function updateGuestInfo()
-     const response = await fetch(`${baseUrl}/1`, {
-     method: 'PATCH',
-     headers: {
-         'Content-Type': 'application/json',
-     },
-     body: JSON.stringify({ attending: true }),
-     });
-     setUpdatedGuest(await response.json());
+  const handleDeleteGuest = (id, guest) => {
+    deleteGuest(id, guest);
+  };
 
   return (
     <div
@@ -141,33 +175,40 @@ function App() {
         setLastName={setLastName}
         handleAddGuest={handleAddGuest}
       />
-      <form>
       <h1>Guest List</h1>
-      <ul>
-        {allGuests.map((guest) => {
-          return (
-            <li key={guest.id}>
-              (`${guest.firstName} ${guest.lastName}`
-              <form action="#" css={toggleButton}>
-                <div className="switch">
-                  <input
-                    id="switch-1"
-                    type="checkbox"
-                    className="switch-input"
-                    checked={updatedGuest}
-                    onChange={(e) => {
-                      setUpdatedGuest(e.currentTarget.checked);
-                    }}
-                  />
-                  <label htmlFor="switch-1" className="switch-label">
-                    Switch
-                  </label>
+      <form>
+        <ul>
+          {allGuests.map((guest) => {
+            return (
+              <li key={guest.id}>
+                {guest.firstName} {guest.lastName}
+                <div css={toggleButton}>
+                  <div className="switch">
+                    <input
+                      id={`switch-${guest.id}`}
+                      type="checkbox"
+                      className="switch-input"
+                      checked={guest.attending}
+                      onChange={(event) => {
+                        handleChangeAttendance(event, guest.id);
+                      }}
+                    />
+                    <label
+                      className="switch-label"
+                      htmlFor={`switch-${guest.id}`}
+                    >
+                      Switch
+                    </label>
+                  </div>
                 </div>
-              </form>
-            </li>
-          );
-        })}
-      </ul>
+                <FaTimes
+                  css={deleteStyles}
+                  onClick={(id) => handleDeleteGuest(id)}
+                />
+              </li>
+            );
+          })}
+        </ul>
       </form>
     </div>
   );
