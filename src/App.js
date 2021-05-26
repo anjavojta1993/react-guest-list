@@ -65,6 +65,34 @@ const deleteStyles = css`
   }
 `;
 
+const logoStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; ;
+`;
+
+const guestInputStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; ;
+`;
+
+const headerStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; ;
+`;
+
+const guestOutputStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; ;
+`;
+
 function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -133,6 +161,10 @@ function App() {
     });
     const updatedGuest = await response.json();
     console.log(updatedGuest);
+
+    const updateAttending = () => {
+      allGuests.map((guest) => guest.id);
+    };
     // replace updatedGuest.attending in allGuests
     // step 1: look for the guest with id that was replaced in allGuests
     // step 2: replace value of attending with current value of attending
@@ -150,39 +182,42 @@ function App() {
   async function deleteGuest(id) {
     const response = await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
     const deletedGuest = await response.json();
+    console.log(deletedGuest);
 
     const filterGuests = () => {
-      setAllGuests(allGuests.filter((guest) => guest.id !== deletedGuest.id));
+      setAllGuests(allGuests.filter(() => deletedGuest.id !== id));
     };
   }
 
-  const handleDeleteGuest = (id, guest) => {
+  /* const handleDeleteGuest = (id, guest) => {
     deleteGuest(id, guest);
-  };
+  }; ALSO WORKS WITHOUT THIS CODE, DON't UNDERSTAND WHY THO */
 
   return (
     <div
       style={{
         background:
           'linear-gradient(125deg, #9468c5 0, #6e92cd 50%, #9adfd1 100%)',
+        width: '100vw',
       }}
     >
-      <Header />
+      <Header css={logoStyles} />
       <GuestInput
+        css={guestInputStyles}
         firstName={firstName}
         lastName={lastName}
         setFirstName={setFirstName}
         setLastName={setLastName}
         handleAddGuest={handleAddGuest}
       />
-      <h1>Guest List</h1>
-      <form>
+      <h1 css={headerStyles}>Guest List</h1>
+      <div className="guestOutput" css={guestOutputStyles}>
         <ul>
           {allGuests.map((guest) => {
             return (
               <li key={guest.id}>
                 {guest.firstName} {guest.lastName}
-                <div css={toggleButton}>
+                <span css={toggleButton}>
                   <div className="switch">
                     <input
                       id={`switch-${guest.id}`}
@@ -200,16 +235,16 @@ function App() {
                       Switch
                     </label>
                   </div>
-                </div>
+                </span>
                 <FaTimes
                   css={deleteStyles}
-                  onClick={(id) => handleDeleteGuest(id)}
+                  onClick={() => deleteGuest(guest.id)}
                 />
               </li>
             );
           })}
         </ul>
-      </form>
+      </div>
     </div>
   );
 }
