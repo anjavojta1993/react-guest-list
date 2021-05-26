@@ -1,12 +1,29 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
+
+const buttonStylesContainer = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  margin-bottom: 20px;
+`;
+
+const buttonStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export default function GuestInput({
   firstName,
   lastName,
   setFirstName,
   setLastName,
-  handleAddGuest,
+  addGuest,
 }) {
   return (
-    <form className="Inputs">
+    <form className="Inputs" onSubmit={(e) => e.preventDefault()}>
       <input
         type="text"
         placeholder="First name"
@@ -21,9 +38,11 @@ export default function GuestInput({
         onChange={(e) => setLastName(e.currentTarget.value)}
       />
       <br />
-      <button type="submit" onClick={handleAddGuest}>
-        Add Guest
-      </button>
+      <div css={buttonStylesContainer}>
+        <button style={buttonStyles} type="submit" onClick={addGuest}>
+          Add Guest
+        </button>
+      </div>
     </form>
   );
 }

@@ -65,11 +65,29 @@ const deleteStyles = css`
   }
 `;
 
+const listStyles = css`
+  list-style-type: none;
+`;
+
 const logoStyles = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto; ;
+  margin: 0 auto;
+`;
+
+const headerStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+`;
+
+const guestInputStylesContainer = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 `;
 
 const guestInputStyles = css`
@@ -79,14 +97,14 @@ const guestInputStyles = css`
   margin: 0 auto; ;
 `;
 
-const headerStyles = css`
+const titleStyles = css`
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto; ;
 `;
 
-const guestOutputStyles = css`
+const guestOutputStylesContainer = css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,7 +115,7 @@ function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const baseUrl = 'http://localhost:5000';
-  const [allGuests, setAllGuests] = useState([]);
+  const [allGuests, setAllGuests] = useState();
 
   // fetch user Data
 
@@ -115,18 +133,19 @@ function App() {
 
   // return loading on the first load when no guest entry yet
 
-  if (allGuests === []) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!allGuests) {
     return (
       <div>
-        <iframe
+        loading....
+        {/* <iframe
           title="Loading gif"
           src="https://giphy.com/embed/feN0YJbVs0fwA"
           width="480"
           height="480"
           frameBorder="0"
           class="giphy-embed"
-          allowFullScreen
-        />
+    allowFullScreen/> */}
       </div>
     );
   }
@@ -142,39 +161,29 @@ function App() {
       body: JSON.stringify({ firstName: firstName, lastName: lastName }),
     });
     const createdGuest = await response.json();
+    const updatedGuests = [...allGuests, createdGuest];
+    setAllGuests(updatedGuests);
   }
-  const handleAddGuest = () => {
-    setFirstName(firstName);
-    setLastName(lastName);
-    addGuest();
-  };
-
   // function to update guest attending
 
-  async function updateGuestInfo(attending, id) {
-    const response = await fetch(`${baseUrl}/${id}`, {
+  async function updateGuestInfo(id, attending) {
+    await fetch(`${baseUrl}/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ attending: attending }),
     });
-    const updatedGuest = await response.json();
-    console.log(updatedGuest);
 
-    const updateAttending = () => {
-      allGuests.map((guest) => guest.id);
-    };
-    // replace updatedGuest.attending in allGuests
-    // step 1: look for the guest with id that was replaced in allGuests
-    // step 2: replace value of attending with current value of attending
-    // step 3: setAllGuests to [...allGuests]
+    // function to update attending toggle frontend
   }
-
-  const handleChangeAttendance = (event, id) => {
-    updateGuestInfo(event.currentTarget.checked, id);
-
-    console.log(event.currentTarget.checked);
+  const handleChangeAttendance = (id, attending) => {
+    const copyUpdatedGuests = [...allGuests];
+    const guestFound = copyUpdatedGuests.find((guest) => guest.id === id);
+    guestFound.attending = attending;
+    console.log(attending);
+    updateGuestInfo(guestFound.id, guestFound.attending);
+    setAllGuests(copyUpdatedGuests);
   };
 
   // function to delete guest
@@ -182,12 +191,13 @@ function App() {
   async function deleteGuest(id) {
     const response = await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
     const deletedGuest = await response.json();
-    console.log(deletedGuest);
-
-    const filterGuests = () => {
-      setAllGuests(allGuests.filter(() => deletedGuest.id !== id));
     };
   }
+    const handleDeletedGuest = () => {
+      setAllGuests(allGuests.filter(() => deletedGuest.id !== id));
+      deleteGuest(id)
+    };
+
 
   /* const handleDeleteGuest = (id, guest) => {
     deleteGuest(id, guest);
@@ -201,18 +211,22 @@ function App() {
         width: '100vw',
       }}
     >
-      <Header css={logoStyles} />
-      <GuestInput
-        css={guestInputStyles}
-        firstName={firstName}
-        lastName={lastName}
-        setFirstName={setFirstName}
-        setLastName={setLastName}
-        handleAddGuest={handleAddGuest}
-      />
-      <h1 css={headerStyles}>Guest List</h1>
-      <div className="guestOutput" css={guestOutputStyles}>
-        <ul>
+      <div css={headerStyles}>
+        <Header css={logoStyles} />
+      </div>
+      <div css={guestInputStylesContainer}>
+        <GuestInput
+          css={guestInputStyles}
+          firstName={firstName}
+          lastName={lastName}
+          setFirstName={setFirstName}
+          setLastName={setLastName}
+          addGuest={addGuest}
+        />
+      </div>
+      <div className="guestOutput" css={guestOutputStylesContainer}>
+        <h1 css={titleStyles}>Guest List</h1>
+        <ul css={listStyles}>
           {allGuests.map((guest) => {
             return (
               <li key={guest.id}>
@@ -225,7 +239,10 @@ function App() {
                       className="switch-input"
                       checked={guest.attending}
                       onChange={(event) => {
-                        handleChangeAttendance(event, guest.id);
+                        handleChangeAttendance(
+                          guest.id,
+                          event.currentTarget.checked,
+                        );
                       }}
                     />
                     <label
@@ -238,7 +255,7 @@ function App() {
                 </span>
                 <FaTimes
                   css={deleteStyles}
-                  onClick={() => deleteGuest(guest.id)}
+                  onClick={() => handleDeleteGuest()}
                 />
               </li>
             );
