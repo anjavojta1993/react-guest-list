@@ -6,6 +6,7 @@ import { FaTimes } from 'react-icons/fa';
 import GuestInput from './components/GuestInput';
 import Header from './components/Header';
 import spartan from './fonts/spartan.ttf';
+import loadingGif from './images/loading.gif';
 
 const toggleButton = css`
   .switch {
@@ -66,11 +67,24 @@ const deleteStyles = css`
   }
 `;
 
+const backgroundStyles = css`
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+`;
+
 const listStyles = css`
   list-style-type: none;
 `;
 
 const logoStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+`;
+
+const loadingGifStyles = css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -145,15 +159,7 @@ function App() {
   if (!allGuests) {
     return (
       <div>
-        loading....
-        {/* <iframe
-          title="Loading gif"
-          src="https://giphy.com/embed/feN0YJbVs0fwA"
-          width="480"
-          height="480"
-          frameBorder="0"
-          class="giphy-embed"
-    allowFullScreen/> */}
+        <img css={loadingGifStyles} src={loadingGif} alt="loading" />
       </div>
     );
   }
@@ -213,10 +219,10 @@ function App() {
 
   return (
     <div
+      css={backgroundStyles}
       style={{
         background:
           'linear-gradient(125deg, #9468c5 0, #6e92cd 50%, #9adfd1 100%)',
-        width: '100vw',
       }}
     >
       <div css={headerStyles}>
