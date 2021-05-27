@@ -191,13 +191,12 @@ function App() {
   async function deleteGuest(id) {
     const response = await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
     const deletedGuest = await response.json();
-    };
-  }
-    const handleDeletedGuest = () => {
-      setAllGuests(allGuests.filter(() => deletedGuest.id !== id));
-      deleteGuest(id)
-    };
 
+    const filteredGuests = allGuests.filter(
+      (guest) => guest.id !== deletedGuest.id,
+    );
+    setAllGuests(filteredGuests);
+  }
 
   /* const handleDeleteGuest = (id, guest) => {
     deleteGuest(id, guest);
@@ -255,7 +254,7 @@ function App() {
                 </span>
                 <FaTimes
                   css={deleteStyles}
-                  onClick={() => handleDeleteGuest()}
+                  onClick={() => deleteGuest(guest.id)}
                 />
               </li>
             );
