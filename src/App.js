@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import GuestInput from './components/GuestInput';
 import Header from './components/Header';
+import spartan from './fonts/spartan.ttf';
 
 const toggleButton = css`
   .switch {
@@ -84,6 +85,7 @@ const headerStyles = css`
 `;
 
 const guestInputStylesContainer = css`
+  font-family: 'spartan';
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,6 +100,9 @@ const guestInputStyles = css`
 `;
 
 const titleStyles = css`
+  font-family: 'spartan';
+  font-size: 50px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -105,6 +110,9 @@ const titleStyles = css`
 `;
 
 const guestOutputStylesContainer = css`
+  font-family: 'spartan';
+  font-size: 26px;
+  font-weight: 300;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,6 +200,7 @@ function App() {
     const response = await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
     const deletedGuest = await response.json();
 
+    // update guestList on the frontend
     const filteredGuests = allGuests.filter(
       (guest) => guest.id !== deletedGuest.id,
     );

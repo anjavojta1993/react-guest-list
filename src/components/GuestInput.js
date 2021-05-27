@@ -1,6 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 
+const inputContainer = css`
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
+
+const inputStyles = css`
+  padding: 5px;
+  font-family: 'spartan';
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 5px;
+`;
+
 const buttonStylesContainer = css`
   display: flex;
   align-items: center;
@@ -10,6 +23,12 @@ const buttonStylesContainer = css`
 `;
 
 const buttonStyles = css`
+  font-family: 'spartan';
+  padding: 10px;
+  border-radius: 5px;
+  background-color: transparent;
+  font-size: 20px;
+  font-weight: 400;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,8 +42,9 @@ export default function GuestInput({
   addGuest,
 }) {
   return (
-    <form className="Inputs" onSubmit={(e) => e.preventDefault()}>
+    <div css={inputContainer}>
       <input
+        css={inputStyles}
         type="text"
         placeholder="First name"
         value={firstName}
@@ -32,6 +52,7 @@ export default function GuestInput({
       />
       <br />
       <input
+        css={inputStyles}
         type="text"
         placeholder="Last name"
         value={lastName}
@@ -39,10 +60,10 @@ export default function GuestInput({
       />
       <br />
       <div css={buttonStylesContainer}>
-        <button style={buttonStyles} type="submit" onClick={addGuest}>
+        <button css={buttonStyles} type="submit" onClick={addGuest}>
           Add Guest
         </button>
       </div>
-    </form>
+    </div>
   );
 }
