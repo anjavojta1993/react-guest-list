@@ -12,6 +12,7 @@ const toggleButton = css`
   .switch {
     position: relative;
     display: inline-block;
+    margin: 10px;
   }
   .switch-input {
     display: none;
@@ -75,6 +76,11 @@ const backgroundStyles = css`
 
 const listStyles = css`
   list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  padding: 10px;
+  z-index: 100;
 `;
 
 const logoStyles = css`
@@ -115,22 +121,62 @@ const guestInputStyles = css`
 
 const titleStyles = css`
   font-family: 'spartan';
-  font-size: 50px;
+  font-size: 36px;
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto; ;
+  margin: 0 auto;
+  margin-top: 20px;
+  z-index: 100;
 `;
 
-const guestOutputStylesContainer = css`
-  font-family: 'spartan';
-  font-size: 26px;
-  font-weight: 300;
+const titleStylesContainer = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto; ;
+`;
+
+const listStylesContainer = css`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  z-index: 100;
+`;
+
+const guestNameStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const handleChangeInputs = css`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+const guestOutputStylesContainer = (guestLength) =>
+  css`
+    font-family: 'spartan';
+    font-size: 16px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    width: 400px;
+    opacity: ${guestLength ? '1' : '0'};
+  `;
+
+const listItemStyles = css`
+  margin: 0px;
+  padding: 0px;
+  z-index: 100;
 `;
 
 function App() {
@@ -238,43 +284,54 @@ function App() {
           addGuest={addGuest}
         />
       </div>
-      <div className="guestOutput" css={guestOutputStylesContainer}>
-        <h1 css={titleStyles}>Guest List</h1>
-        <ul css={listStyles}>
-          {allGuests.map((guest) => {
-            return (
-              <li key={guest.id}>
-                {guest.firstName} {guest.lastName}
-                <span css={toggleButton}>
-                  <div className="switch">
-                    <input
-                      id={`switch-${guest.id}`}
-                      type="checkbox"
-                      className="switch-input"
-                      checked={guest.attending}
-                      onChange={(event) => {
-                        handleChangeAttendance(
-                          guest.id,
-                          event.currentTarget.checked,
-                        );
-                      }}
-                    />
-                    <label
-                      className="switch-label"
-                      htmlFor={`switch-${guest.id}`}
-                    >
-                      Switch
-                    </label>
+      <div
+        className="guestOutput"
+        css={guestOutputStylesContainer(allGuests.length)}
+      >
+        <div css={titleStylesContainer}>
+          <h1 css={titleStyles}>Guest List</h1>
+        </div>
+        <div css={listStylesContainer}>
+          <ul css={listStyles}>
+            {allGuests.map((guest) => {
+              return (
+                <li css={listItemStyles} key={guest.id}>
+                  <div css={guestNameStyles}>
+                    {guest.firstName} {guest.lastName}
+                    <div css={handleChangeInputs}>
+                      <div css={toggleButton}>
+                        <div className="switch">
+                          <input
+                            id={`switch-${guest.id}`}
+                            type="checkbox"
+                            className="switch-input"
+                            checked={guest.attending}
+                            onChange={(event) => {
+                              handleChangeAttendance(
+                                guest.id,
+                                event.currentTarget.checked,
+                              );
+                            }}
+                          />
+                          <label
+                            className="switch-label"
+                            htmlFor={`switch-${guest.id}`}
+                          >
+                            Switch
+                          </label>
+                        </div>
+                      </div>
+                      <FaTimes
+                        css={deleteStyles}
+                        onClick={() => deleteGuest(guest.id)}
+                      />
+                    </div>
                   </div>
-                </span>
-                <FaTimes
-                  css={deleteStyles}
-                  onClick={() => deleteGuest(guest.id)}
-                />
-              </li>
-            );
-          })}
-        </ul>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </div>
   );
