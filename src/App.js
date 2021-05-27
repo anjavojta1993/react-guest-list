@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import GuestInput from './components/GuestInput';
 import Header from './components/Header';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import spartan from './fonts/spartan.ttf';
 import loadingGif from './images/loading.gif';
 
