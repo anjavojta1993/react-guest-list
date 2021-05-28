@@ -54,7 +54,7 @@ const toggleButton = css`
     transition: left 0.25s ease;
   }
   .switch-input:checked + .switch-label::before {
-    background-color: #89c12d;
+    background-color: #9468c5;
   }
   .switch-input:checked + .switch-label::after {
     left: 24px;
@@ -169,7 +169,7 @@ const guestOutputStylesContainer = (guestLength) =>
     flex-direction: column;
     margin: 0 auto;
     background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
+    border-radius: 5px;
     width: 400px;
     opacity: ${guestLength ? '1' : '0'};
     box-shadow: 0 7px 17px rgb(0 0 0 / 13%);
