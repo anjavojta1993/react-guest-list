@@ -172,6 +172,7 @@ const guestOutputStylesContainer = (guestLength) =>
     border-radius: 10px;
     width: 400px;
     opacity: ${guestLength ? '1' : '0'};
+    box-shadow: 0 7px 17px rgb(0 0 0 / 13%);
   `;
 
 const listItemStyles = css`
