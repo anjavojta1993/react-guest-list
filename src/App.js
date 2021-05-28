@@ -168,6 +168,7 @@ const guestOutputStylesContainer = (guestLength) =>
     justify-content: space-between;
     flex-direction: column;
     margin: 0 auto;
+    margin-bottom: 10px;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 5px;
     width: 400px;
